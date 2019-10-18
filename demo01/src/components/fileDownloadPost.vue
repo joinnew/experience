@@ -35,6 +35,11 @@ export default {
               elink.download = fileName
               elink.style.display = 'none'
               elink.href = URL.createObjectURL(blob)
+              // 在Chrome、Firefox、Safari、360、EdgeHtml浏览器中，均可以成功下载文件，但是在Edge中，会报错。
+              // 原因：在Edge中使用Blob生成的是不带域名的blob链接，如下：
+              // 类似这样的地址：blob:00F0B45-DD4E-4F4F-9B15-000368F15E20，也就是说无法通过a链接下载
+              // 而在chrome等浏览器下，生成的是带域名的， 如： http://xxx.xxx.biz/86e01467-6...;
+              // 所以针对不同浏览器采用不同的api进行处理
               document.body.appendChild(elink)
               elink.click()
               URL.revokeObjectURL(elink.href) // 释放URL 对象
